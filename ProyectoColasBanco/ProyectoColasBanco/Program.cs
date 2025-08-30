@@ -10,6 +10,7 @@ namespace ProyectoColasBanco
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Bananita Dolphinita, LOL");
         }
     }
 }
