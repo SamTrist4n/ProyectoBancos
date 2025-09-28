@@ -1,0 +1,7 @@
+nroVentanilla,dni_cajero,dni_Cliente,nroTicket,preferencial,atendido,TiempoRestante
+1,22222222,84763310,1283,false,false,3
+2,44444444,34763247,1085,false,false,1
+3,66666666,36989861,1278,true,false,2
+4,33333333,27721508,1155,false,false,4
+5,44444444,18881482,1005,false,true,0
+6,44444444,81969939,1291,true,true,0

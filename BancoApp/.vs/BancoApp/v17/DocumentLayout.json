@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\formsimulacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:formsimulacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\formsimulacion.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:formsimulacion.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FormSimulacion.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormSimulacion.cs",
+              "RelativeDocumentMoniker": "FormSimulacion.cs",
+              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormSimulacion.cs",
+              "RelativeToolTip": "FormSimulacion.cs",
+              "ViewState": "AgIAAPIAAAAAAAAAAAAAAPIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T14:32:19.75Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FormSimulacion.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormSimulacion.Designer.cs",
+              "RelativeDocumentMoniker": "FormSimulacion.Designer.cs",
+              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormSimulacion.Designer.cs",
+              "RelativeToolTip": "FormSimulacion.Designer.cs",
+              "ViewState": "AgIAAJgAAAAAAAAAAAAAAKAAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T14:32:13.18Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
