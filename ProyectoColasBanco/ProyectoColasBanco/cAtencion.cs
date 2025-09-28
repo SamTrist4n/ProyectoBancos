@@ -96,7 +96,10 @@ namespace ProyectoColasBanco
         {
             return aNroTicket.Equals(O.ToString());
         }
-
+        public override int GetHashCode()
+        {
+            return IdServicio.GetHashCode();
+        }
         public void Leer()
         {
             Console.WriteLine();

@@ -78,7 +78,10 @@ namespace ProyectoColasBanco
         {
             return aDNI.Equals(O.ToString());
         }
-
+        public override int GetHashCode()
+        {
+            return aDNI.GetHashCode();
+        }
         public void Leer()
         {
             Console.WriteLine();

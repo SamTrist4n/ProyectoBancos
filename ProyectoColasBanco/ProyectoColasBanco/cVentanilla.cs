@@ -87,7 +87,10 @@ namespace ProyectoColasBanco
         {
             return aNroVentanilla.ToString().Equals(O.ToString());
         }
-
+        public override int GetHashCode()
+        {
+            return aNroVentanilla.GetHashCode();
+        }
         public void Leer()
         {
             Console.WriteLine();
@@ -129,4 +132,4 @@ namespace ProyectoColasBanco
         #endregion
     }
 }
-}
+

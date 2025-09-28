@@ -51,6 +51,11 @@ namespace ProyectoColasBanco
         {
             return aIdServicio.Equals(O.ToString());
         }
+        public override int GetHashCode()
+        {
+            return IdServicio.GetHashCode();
+        }
+
 
         public void Leer()
         {
