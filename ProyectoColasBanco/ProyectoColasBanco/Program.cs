@@ -12,6 +12,7 @@ namespace ProyectoColasBanco
         {
             Console.WriteLine("Bananita Dolphinita, LOL");
             Console.WriteLine("Esto11111111111 es necesariopppppp");
+            Console.WriteLine("XD");
         }
     }
 }
