@@ -11,7 +11,7 @@ namespace ProyectoColasBanco
         static void Main(string[] args)
         {
             Console.WriteLine("Bananita Dolphinita, LOL");
-            Console.WriteLine("Esto es necesario");
+            Console.WriteLine("Esto es necesariopppppp");
         }
     }
 }
