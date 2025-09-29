@@ -43,11 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="cCliente.cs" />
-    <Compile Include="cCajero.cs" />
-    <Compile Include="cAtencion.cs" />
-    <Compile Include="cServicio.cs" />
-    <Compile Include="cVentanilla.cs" />
+    <Compile Include="CsvLoader.cs" />
+    <Compile Include="SistemaBanco.cs" />
+    <Compile Include="Clases.cs" />
+    <Compile Include="EstructurasDatos.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
