@@ -1,6 +1,10 @@
-﻿using System;
+﻿// Program.cs
+using System;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
 
 namespace ProyectoColasBanco
 {
@@ -26,8 +30,6 @@ namespace ProyectoColasBanco
 
             try
             {
-                // Si quieres que CargarTodo use nombres relativos (esperados por tu CsvLoader), solo posiciona los CSV en bin.
-                // Tu CsvLoader.CargarTodo() llama a CargarClientes("Clientes.csv") etc.
                 loader.CargarTodo();
                 Console.WriteLine("Carga inicial completada.");
             }
@@ -62,6 +64,7 @@ namespace ProyectoColasBanco
                 Console.WriteLine("13. Exportar reporte transacciones (últimos 2 meses)");
                 Console.WriteLine("14. Exportar reporte ventanillas");
                 Console.WriteLine("15. Recargar CSVs (desde bin)");
+                Console.WriteLine("16. Simulación gráfica (con cola y ventanillas)");
                 Console.WriteLine("0. Salir");
                 Console.Write("Opción: ");
 
@@ -90,6 +93,7 @@ namespace ProyectoColasBanco
                         case 13: ExportarTransacciones(); break;
                         case 14: ExportarVentanillas(); break;
                         case 15: CargarCsvInicial(); break;
+                        case 16: IniciarSimulacionGrafica(); break;
                         case 0: break;
                         default: Console.WriteLine("Opción no válida."); break;
                     }
@@ -148,7 +152,7 @@ namespace ProyectoColasBanco
         static void ListarClientes()
         {
             Console.WriteLine("\n=== CLIENTES ===");
-            Console.WriteLine("DNI\tNombres\tFecha Nacimiento\tDiscapacidad\tNiños\tEmail\tTeléfono\tMonto");
+            Console.WriteLine("DNI".PadRight(12) + "Nombres".PadRight(25) + "F.Nac".PadRight(12) + "Disc".PadRight(6) + "Niños".PadRight(6) + "Email".PadRight(25) + "Tel".PadRight(15) + "Monto".PadLeft(10));
             var todos = sistema.Clientes.ObtenerTodos();
             foreach (var c in todos) c.Escribir();
         }
@@ -156,7 +160,7 @@ namespace ProyectoColasBanco
         static void ListarCajeros()
         {
             Console.WriteLine("\n=== CAJEROS ===");
-            Console.WriteLine("DNI\tNombres\tDirección\tEmail\tTeléfono");
+            Console.WriteLine("DNI".PadRight(12) + "Nombres".PadRight(25) + "Dirección".PadRight(30) + "Email".PadRight(25) + "Tel".PadRight(15));
             var todos = sistema.Cajeros.ObtenerTodos();
             foreach (var c in todos) c.Escribir();
         }
@@ -164,7 +168,7 @@ namespace ProyectoColasBanco
         static void ListarServicios()
         {
             Console.WriteLine("\n=== SERVICIOS ===");
-            Console.WriteLine("ID\tDescripción");
+            Console.WriteLine("IdServicio".PadRight(12) + "Descripción".PadRight(50));
             var todos = sistema.Servicios.ObtenerTodos();
             foreach (var s in todos) s.Escribir();
         }
@@ -172,7 +176,7 @@ namespace ProyectoColasBanco
         static void ListarAtenciones()
         {
             Console.WriteLine("\n=== ATENCIONES ===");
-            Console.WriteLine("Ticket\tFechaHora\tCliente\tCajero\tServicio\tMonto\tSegundos");
+            Console.WriteLine("Ticket".PadRight(12) + "FechaHora".PadRight(20) + "Cliente".PadRight(12) + "Cajero".PadRight(12) + "Servicio".PadRight(12) + "Monto".PadLeft(10) + "Segs".PadLeft(8));
             var todos = sistema.Atenciones.ObtenerTodos();
             foreach (var a in todos) a.Escribir();
         }
@@ -180,7 +184,7 @@ namespace ProyectoColasBanco
         static void ListarVentanillas()
         {
             Console.WriteLine("\n=== VENTANILLAS ===");
-            Console.WriteLine("Nro\tCajero\tCliente\tTicket\tPreferencial\tAtendido\tTiempoRestante");
+            Console.WriteLine("Nro".PadRight(6) + "DNI Cajero".PadRight(12) + "DNI Cliente".PadRight(12) + "Ticket".PadRight(12) + "Pref".PadRight(6) + "Atendido".PadRight(8) + "TiempoRest");
             foreach (var v in sistema.Ventanillas) v.Escribir();
         }
         #endregion
@@ -222,5 +226,278 @@ namespace ProyectoColasBanco
             Console.WriteLine("Reporte exportado a: " + Path.GetFullPath(ruta));
         }
         #endregion
+
+        static void IniciarSimulacionGrafica()
+        {
+            Console.WriteLine("Iniciando simulación gráfica... (P pausa/resume, A llegada forzada, C limpiar, Esc salir)");
+            SimulacionConsola.Run(sistema);
+        }
+    }
+
+    public static class SimulacionConsola
+    {
+        public static int TickMs = 700;           // duración de cada tick (ms)
+        public static double ProbabilidadLlegada = 0.5; // probabilidad de llegada por tick
+        public static int MaxMostrarCola = 8;
+
+        public static void Run(SistemaBanco sistema)
+        {
+            if (sistema == null) throw new ArgumentNullException(nameof(sistema));
+
+            var rnd = new Random();
+            bool running = true;
+            bool paused = false;
+
+            Console.Clear();
+            Console.CursorVisible = false;
+
+            PrintControls();
+
+            while (running)
+            {
+                if (!paused)
+                {
+                    // generar llegada aleatoria
+                    if (rnd.NextDouble() <= ProbabilidadLlegada)
+                    {
+                        GenerarLlegadaAleatoria(sistema, rnd);
+                    }
+
+                    // procesar atenciones (actualiza tiempos y asignaciones)
+                    sistema.ProcesarAtenciones();
+                }
+
+                RenderEstado(sistema);
+
+                // manejo de teclas
+                while (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey(true).Key;
+                    if (key == ConsoleKey.Escape) { running = false; break; }
+                    if (key == ConsoleKey.P) { paused = !paused; PrintPauseStatus(paused); }
+                    if (key == ConsoleKey.A) { GenerarLlegadaAleatoria(sistema, rnd, true); RenderEstado(sistema); }
+                    if (key == ConsoleKey.C) { ClearQueuesAndVentanillas(sistema); }
+                }
+
+                Thread.Sleep(TickMs);
+            }
+
+            Console.CursorVisible = true;
+            Console.WriteLine("\nSimulación finalizada. Presiona una tecla...");
+            Console.ReadKey(true);
+        }
+
+        static void PrintControls()
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("SIMULACIÓN - BANCO (Esc sale)");
+            Console.WriteLine("[P] Pausa/Resume   [A] Forzar llegada   [C] Limpiar colas");
+            Console.WriteLine();
+        }
+
+        static void PrintPauseStatus(bool paused)
+        {
+            Console.SetCursorPosition(0, 3);
+            Console.WriteLine(paused ? "PAUSADO".PadRight(80) : "EN EJECUCIÓN".PadRight(80));
+        }
+
+        static void RenderEstado(SistemaBanco sistema)
+        {
+            int top = 4;
+            int colWidth = 36;
+            var ventanillas = sistema.Ventanillas;
+            int perRow = Math.Max(1, Console.WindowWidth / (colWidth + 2));
+            int row = 0;
+            for (int i = 0; i < ventanillas.Count; i++)
+            {
+                int colIndex = i % perRow;
+                row = i / perRow;
+                int x = colIndex * (colWidth + 2);
+                int y = top + row * 7;
+                DrawVentanillaBox(ventanillas[i], x, y, colWidth);
+            }
+
+            int afterVentasRows = (ventanillas.Count + perRow - 1) / perRow;
+            int colaTop = top + Math.Max(1, afterVentasRows) * 7 + 1;
+
+            DrawCola("COLA PREFERENCIAL", sistema.ColaPreferencial, colaTop, 0, Console.WindowWidth / 2 - 1);
+            DrawCola("COLA NORMAL      ", sistema.ColaNormal, colaTop, Console.WindowWidth / 2 + 1, Console.WindowWidth / 2 - 2);
+
+            int statsTop = colaTop + 8;
+            DrawStats(sistema, statsTop, 0);
+        }
+
+        static void DrawVentanillaBox(Ventanilla v, int x, int y, int width)
+        {
+            for (int i = 0; i < 6; i++) SafeWriteAt(new string(' ', width), x, y + i);
+
+            SafeWriteAt("+" + new string('-', width - 2) + "+", x, y);
+            SafeWriteAt("|" + CenterText($"Ventanilla {v.NroVentanilla}", width - 2) + "|", x, y + 1);
+
+            string cajero = string.IsNullOrWhiteSpace(v.DNICajero) ? "(sin cajero)" : v.DNICajero;
+            SafeWriteAt("| Cajero: " + Truncate(cajero, width - 11).PadRight(width - 11) + "|", x, y + 2);
+
+            string cliente = string.IsNullOrWhiteSpace(v.DNICliente) ? "(libre)" : v.DNICliente;
+            string ticket = string.IsNullOrWhiteSpace(v.NroTicket) ? "" : v.NroTicket;
+            SafeWriteAt("| Cliente: " + Truncate(cliente + " " + ticket, width - 11).PadRight(width - 11) + "|", x, y + 3);
+
+            string pref = v.Preferencial ? "S" : "N";
+            SafeWriteAt("| Pref: " + pref.PadRight(4) + " Tiempo: " + v.TiempoRestante.ToString().PadLeft(3) + "s" + new string(' ', Math.Max(0, width - 28)) + "|", x, y + 4);
+
+            SafeWriteAt("+" + new string('-', width - 2) + "+", x, y + 5);
+        }
+
+        static void DrawCola(string titulo, object colaObj, int top, int left, int width)
+        {
+            SafeWriteAt(titulo.PadRight(width), left, top);
+            SafeWriteAt("[" + " ".PadRight(width - 2) + "]", left, top + 1);
+
+            // intentar snapshot
+            var snapshot = TryGetColaSnapshot(colaObj);
+            if (snapshot != null)
+            {
+                var list = snapshot.Take(MaxMostrarCola).ToList();
+                for (int i = 0; i < MaxMostrarCola; i++)
+                {
+                    string text = i < list.Count ? $"{i + 1}. {Truncate(list[i].DNI + " " + list[i].Nombres, width - 4)}" : "";
+                    SafeWriteAt(text.PadRight(width), left, top + 2 + i);
+                }
+                SafeWriteAt($"Total: {snapshot.Count()}".PadRight(width), left, top + 2 + MaxMostrarCola);
+            }
+            else
+            {
+                int count = TryGetColaCount(colaObj);
+                for (int i = 0; i < MaxMostrarCola; i++) SafeWriteAt("".PadRight(width), left, top + 2 + i);
+                SafeWriteAt($"Total: {count}".PadRight(width), left, top + 2 + MaxMostrarCola);
+            }
+        }
+
+        // intenta varios métodos/properties para obtener snapshot (ObtenerTodos, ToArray, ToList, internal)
+        static IEnumerable<Cliente> TryGetColaSnapshot(object cola)
+        {
+            try
+            {
+                if (cola == null) return null;
+                if (cola is IEnumerable<Cliente> en) return en.ToList();
+
+                var miObtener = cola.GetType().GetMethod("ObtenerTodos");
+                if (miObtener != null)
+                {
+                    var res = miObtener.Invoke(cola, null) as IEnumerable<Cliente>;
+                    return res?.ToList();
+                }
+
+                var miToArray = cola.GetType().GetMethod("ToArray");
+                if (miToArray != null)
+                {
+                    var arr = miToArray.Invoke(cola, null) as Cliente[];
+                    return arr?.ToList();
+                }
+
+                // Try method that returns array via reflection "ToList" or "ToArray" elsewhere
+                return null;
+            }
+            catch { return null; }
+        }
+
+        static int TryGetColaCount(object cola)
+        {
+            try
+            {
+                var miTamaño = cola.GetType().GetMethod("Tamaño");
+                if (miTamaño != null) return (int)miTamaño.Invoke(cola, null);
+
+                var propCount = cola.GetType().GetProperty("Count");
+                if (propCount != null) return (int)propCount.GetValue(cola);
+
+                var miCount = cola.GetType().GetMethod("Count");
+                if (miCount != null) return (int)miCount.Invoke(cola, null);
+
+                return -1;
+            }
+            catch { return -1; }
+        }
+
+        static void DrawStats(SistemaBanco sistema, int top, int left)
+        {
+            SafeWriteAt("=== ESTADÍSTICAS ===", left, top);
+            SafeWriteAt($"Clientes totales: {sistema.Clientes.ObtenerTodos().Count()}", left, top + 1);
+            SafeWriteAt($"Atenciones en memoria: {sistema.Atenciones.ObtenerTodos().Count()}", left, top + 2);
+            SafeWriteAt($"Cola preferencial (intento): {TryGetColaCount(sistema.ColaPreferencial)}", left, top + 3);
+            SafeWriteAt($"Cola normal (intento): {TryGetColaCount(sistema.ColaNormal)}", left, top + 4);
+            SafeWriteAt($"Hora: {DateTime.Now:dd/MM/yyyy HH:mm:ss}", left, top + 6);
+        }
+
+        static void SafeWriteAt(string text, int x, int y)
+        {
+            try
+            {
+                if (y < 0) return;
+                if (x < 0) x = 0;
+                Console.SetCursorPosition(x, y);
+                Console.Write(text);
+            }
+            catch { }
+        }
+
+        static string CenterText(string text, int width)
+        {
+            if (text.Length >= width) return text.Substring(0, width);
+            int left = (width - text.Length) / 2;
+            return new string(' ', left) + text + new string(' ', width - text.Length - left);
+        }
+
+        static string Truncate(string s, int width)
+        {
+            if (string.IsNullOrEmpty(s)) return "";
+            if (s.Length <= width) return s;
+            return s.Substring(0, width - 3) + "...";
+        }
+
+        static void GenerarLlegadaAleatoria(SistemaBanco sistema, Random rnd, bool forzar = false)
+        {
+            var todos = sistema.Clientes.ObtenerTodos().ToList();
+            Cliente cliente = null;
+            if (todos.Count > 0 && (forzar || rnd.NextDouble() < 0.8))
+            {
+                cliente = todos[rnd.Next(todos.Count)];
+            }
+
+            if (cliente == null)
+            {
+                cliente = new Cliente
+                {
+                    DNI = "X" + rnd.Next(1000, 9999),
+                    Nombres = "Genérico" + rnd.Next(1, 99),
+                    FechaNacimiento = DateTime.Today.AddYears(-rnd.Next(18, 80)),
+                    Discapacidad = rnd.NextDouble() < 0.08,
+                    Niños = rnd.NextDouble() < 0.15 ? rnd.Next(1, 4) : 0,
+                    Email = "auto@demo",
+                    Telefono = "000",
+                    Monto = rnd.Next(0, 5000)
+                };
+            }
+
+            // Encolar con la lógica del sistema (generará ticket y encolará en las colas internas)
+            sistema.AgregarClienteACola(cliente);
+        }
+
+        static void ClearQueuesAndVentanillas(SistemaBanco sistema)
+        {
+            try
+            {
+                var miPref = sistema.ColaPreferencial.GetType().GetMethod("Clear");
+                miPref?.Invoke(sistema.ColaPreferencial, null);
+            }
+            catch { }
+            try
+            {
+                var miNorm = sistema.ColaNormal.GetType().GetMethod("Clear");
+                miNorm?.Invoke(sistema.ColaNormal, null);
+            }
+            catch { }
+
+            foreach (var v in sistema.Ventanillas) v.Liberar();
+        }
     }
 }
