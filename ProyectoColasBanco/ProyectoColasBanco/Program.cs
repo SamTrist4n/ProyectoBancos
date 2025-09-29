@@ -7,71 +7,84 @@ using System.Threading.Tasks;
 
 namespace ProyectoColasBanco
 {
-    public static class DataStore
+    class Program
     {
-        public static List<cCliente> Clientes { get; } = new List<cCliente>();
-        public static List<cCajero> Cajeros { get; } = new List<cCajero>();
-        public static List<cServicio> Servicios { get; } = new List<cServicio>();
-        public static List<cAtencion> Atenciones { get; } = new List<cAtencion>();
-        public static List<cVentanilla> Ventanillas { get; } = new List<cVentanilla>();
-    }
+        static List<cCliente> clientes = new List<cCliente>();
+        static List<cCajero> cajeros = new List<cCajero>();
+        static List<cServicio> servicios = new List<cServicio>();
+        static List<cAtencion> atenciones = new List<cAtencion>();
+        static List<cVentanilla> ventanillas = new List<cVentanilla>();
 
-
-    // Managers (módulos) para operaciones CRUD y listados — usan tus clases originales
-    public static class ClienteManager
-    {
-        public static void Registrar(cCliente c)
-        {
-            if (DataStore.Clientes.Any(x => x.DNI.Equals(c.DNI))) throw new InvalidOperationException("Cliente ya existe.");
-            DataStore.Clientes.Add(c);
-        }
-
-
-        public static IEnumerable<cCliente> Listar() => DataStore.Clientes;
-
-
-        public static cCliente Obtener(string dni) => DataStore.Clientes.FirstOrDefault(x => x.DNI == dni);
-    }
-
-
-    public static class CajeroManager
-    {
-        public static void Registrar(cCajero c)
-        {
-            if (DataStore.Cajeros.Any(x => x.DNI.Equals(c.DNI))) throw new InvalidOperationException("Cajero ya existe.");
-            DataStore.Cajeros.Add(c);
-        }
-
-
-        public static IEnumerable<cCajero> Listar() => DataStore.Cajeros;
-
-
-        public static cCajero Obtener(string dni) => DataStore.Cajeros.FirstOrDefault(x => x.DNI == dni);
-    }
-
-
-    public static class ServicioManager
-    {
-        public static void Registrar(cServicio s)
-        {
-            if (DataStore.Servicios.Any(x => x.IdServicio.Equals(s.IdServicio))) throw new InvalidOperationException("Servicio ya existe.");
-            DataStore.Servicios.Add(s);
-        }
-
-
-        public static IEnumerable<cServicio> Listar() => DataStore.Servicios;
-
-
-        public static cServicio Obtener(string id) => DataStore.Servicios.FirstOrDefault(x => x.IdServicio == id);
-    }
-}
-internal class Program
-    {
         static void Main(string[] args)
         {
-            Console.WriteLine("Bananita Dolphinita, LOL");
-            Console.WriteLine("Esto11111111111 es necesariopppppp");
+            int opcion;
+            do
+            {
+                Console.WriteLine("\n===== MENÚ PRINCIPAL =====");
+                Console.WriteLine("1. Registrar Cliente");
+                Console.WriteLine("2. Registrar Cajero");
+                Console.WriteLine("3. Registrar Servicio");
+                Console.WriteLine("4. Registrar Atención");
+                Console.WriteLine("5. Registrar Ventanilla");
+                Console.WriteLine("6. Listar Clientes");
+                Console.WriteLine("7. Listar Cajeros");
+                Console.WriteLine("8. Listar Servicios");
+                Console.WriteLine("9. Listar Atenciones");
+                Console.WriteLine("10. Listar Ventanillas");
+                Console.WriteLine("0. Salir");
+                Console.Write("Opción: ");
+                opcion = int.Parse(Console.ReadLine());
 
+                switch (opcion)
+                {
+                    case 1:
+                        var cliente = new cCliente();
+                        cliente.Leer();   // Usa el método de la clase
+                        clientes.Add(cliente);
+                        break;
+                    case 2:
+                        var cajero = new cCajero();
+                        cajero.Leer();
+                        cajeros.Add(cajero);
+                        break;
+                    case 3:
+                        var servicio = new cServicio();
+                        servicio.Leer();
+                        servicios.Add(servicio);
+                        break;
+                    case 4:
+                        var atencion = new cAtencion();
+                        atencion.Leer();
+                        atenciones.Add(atencion);
+                        break;
+                    case 5:
+                        var ventanilla = new cVentanilla();
+                        ventanilla.Leer();
+                        ventanillas.Add(ventanilla);
+                        break;
+                    case 6:
+                        Console.WriteLine("\n=== CLIENTES ===");
+                        foreach (var c in clientes) c.Mostrar();
+                        break;
+                    case 7:
+                        Console.WriteLine("\n=== CAJEROS ===");
+                        foreach (var c in cajeros) c.Mostrar();
+                        break;
+                    case 8:
+                        Console.WriteLine("\n=== SERVICIOS ===");
+                        foreach (var s in servicios) s.Mostrar();
+                        break;
+                    case 9:
+                        Console.WriteLine("\n=== ATENCIONES ===");
+                        foreach (var a in atenciones) a.Mostrar();
+                        break;
+                    case 10:
+                        Console.WriteLine("\n=== VENTANILLAS ===");
+                        foreach (var v in ventanillas) v.Mostrar();
+                        break;
+                }
+
+            } while (opcion != 0);
         }
     }
 }
