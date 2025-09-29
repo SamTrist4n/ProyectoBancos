@@ -9,11 +9,11 @@ namespace ProyectoColasBanco
 {
     class Program
     {
-        static List<cCliente> clientes = new List<cCliente>();
-        static List<cCajero> cajeros = new List<cCajero>();
-        static List<cServicio> servicios = new List<cServicio>();
-        static List<cAtencion> atenciones = new List<cAtencion>();
-        static List<cVentanilla> ventanillas = new List<cVentanilla>();
+        static List<Cliente> clientes = new List<Cliente>();
+        static List<Cajero> cajeros = new List<Cajero>();
+        static List<Servicio> servicios = new List<Servicio>();
+        static List<Atencion> atenciones = new List<Atencion>();
+        static List<Ventanilla> ventanillas = new List<Ventanilla>();
 
         static void Main(string[] args)
         {
@@ -38,27 +38,27 @@ namespace ProyectoColasBanco
                 switch (opcion)
                 {
                     case 1:
-                        var cliente = new cCliente();
+                        var cliente = new Cliente();
                         cliente.Leer();   // Usa el método de la clase
                         clientes.Add(cliente);
                         break;
                     case 2:
-                        var cajero = new cCajero();
+                        var cajero = new Cajero();
                         cajero.Leer();
                         cajeros.Add(cajero);
                         break;
                     case 3:
-                        var servicio = new cServicio();
+                        var servicio = new Servicio();
                         servicio.Leer();
                         servicios.Add(servicio);
                         break;
                     case 4:
-                        var atencion = new cAtencion();
+                        var atencion = new Atencion();
                         atencion.Leer();
                         atenciones.Add(atencion);
                         break;
                     case 5:
-                        var ventanilla = new cVentanilla();
+                        var ventanilla = new Ventanilla();
                         ventanilla.Leer();
                         ventanillas.Add(ventanilla);
                         break;
