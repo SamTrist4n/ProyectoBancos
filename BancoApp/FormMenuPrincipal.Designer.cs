@@ -17,6 +17,7 @@
         private System.Windows.Forms.Button btnGenerarReportes;
         private System.Windows.Forms.Button btnSalir;
         private System.Windows.Forms.Button btnCargarDatos;
+        private System.Windows.Forms.Button btnTransacciones;
 
         /// <summary>
         /// Limpiar los recursos que se estén usando.
@@ -38,131 +39,154 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panelPrincipal = new System.Windows.Forms.Panel();
-            this.btnCargarDatos = new System.Windows.Forms.Button();
-            this.lblTitulo = new System.Windows.Forms.Label();
-            this.btnGestionClientes = new System.Windows.Forms.Button();
-            this.btnGestionCajeros = new System.Windows.Forms.Button();
-            this.btnGestionServicios = new System.Windows.Forms.Button();
-            this.btnConfigurarVentanillas = new System.Windows.Forms.Button();
-            this.btnIniciarSimulacion = new System.Windows.Forms.Button();
-            this.btnGenerarReportes = new System.Windows.Forms.Button();
-            this.btnSalir = new System.Windows.Forms.Button();
-            this.panelPrincipal.SuspendLayout();
-            this.SuspendLayout();
+            panelPrincipal = new Panel();
+            btnCargarDatos = new Button();
+            btnSalir = new Button();
+            btnGenerarReportes = new Button();
+            btnIniciarSimulacion = new Button();
+            btnConfigurarVentanillas = new Button();
+            btnGestionServicios = new Button();
+            btnGestionCajeros = new Button();
+            btnGestionClientes = new Button();
+            lblTitulo = new Label();
+            btnTransacciones = new Button();
+            panelPrincipal.SuspendLayout();
+            SuspendLayout();
             // 
             // panelPrincipal
             // 
-            this.panelPrincipal.Controls.Add(this.btnCargarDatos);
-            this.panelPrincipal.Controls.Add(this.btnSalir);
-            this.panelPrincipal.Controls.Add(this.btnGenerarReportes);
-            this.panelPrincipal.Controls.Add(this.btnIniciarSimulacion);
-            this.panelPrincipal.Controls.Add(this.btnConfigurarVentanillas);
-            this.panelPrincipal.Controls.Add(this.btnGestionServicios);
-            this.panelPrincipal.Controls.Add(this.btnGestionCajeros);
-            this.panelPrincipal.Controls.Add(this.btnGestionClientes);
-            this.panelPrincipal.Controls.Add(this.lblTitulo);
-            this.panelPrincipal.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelPrincipal.Location = new System.Drawing.Point(0, 0);
-            this.panelPrincipal.Name = "panelPrincipal";
-            this.panelPrincipal.Padding = new System.Windows.Forms.Padding(20);
-            this.panelPrincipal.Size = new System.Drawing.Size(800, 600);
-            this.panelPrincipal.TabIndex = 0;
+            panelPrincipal.Controls.Add(btnCargarDatos);
+            panelPrincipal.Controls.Add(btnSalir);
+            panelPrincipal.Controls.Add(btnGenerarReportes);
+            panelPrincipal.Controls.Add(btnIniciarSimulacion);
+            panelPrincipal.Controls.Add(btnConfigurarVentanillas);
+            panelPrincipal.Controls.Add(btnGestionServicios);
+            panelPrincipal.Controls.Add(btnGestionCajeros);
+            panelPrincipal.Controls.Add(btnGestionClientes);
+            panelPrincipal.Controls.Add(lblTitulo);
+            panelPrincipal.Controls.Add(btnTransacciones);
+            panelPrincipal.Dock = DockStyle.Fill;
+            panelPrincipal.Location = new Point(0, 0);
+            panelPrincipal.Margin = new Padding(4, 5, 4, 5);
+            panelPrincipal.Name = "panelPrincipal";
+            panelPrincipal.Padding = new Padding(25, 31, 25, 31);
+            panelPrincipal.Size = new Size(1000, 938);
+            panelPrincipal.TabIndex = 0;
             // 
             // btnCargarDatos
             // 
-            this.btnCargarDatos.Location = new System.Drawing.Point(400, 100);
-            this.btnCargarDatos.Name = "btnCargarDatos";
-            this.btnCargarDatos.Size = new System.Drawing.Size(300, 40);
-            this.btnCargarDatos.TabIndex = 8;
-            this.btnCargarDatos.Text = "Cargar Datos desde CSV";
-            this.btnCargarDatos.UseVisualStyleBackColor = true;
-            // 
-            // lblTitulo
-            // 
-            this.lblTitulo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblTitulo.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold);
-            this.lblTitulo.Location = new System.Drawing.Point(20, 20);
-            this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(760, 50);
-            this.lblTitulo.TabIndex = 0;
-            this.lblTitulo.Text = "Menú Principal";
-            this.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnGestionClientes
-            // 
-            this.btnGestionClientes.Location = new System.Drawing.Point(50, 100);
-            this.btnGestionClientes.Name = "btnGestionClientes";
-            this.btnGestionClientes.Size = new System.Drawing.Size(300, 40);
-            this.btnGestionClientes.TabIndex = 1;
-            this.btnGestionClientes.Text = "Gestión de Clientes";
-            this.btnGestionClientes.UseVisualStyleBackColor = true;
-            // 
-            // btnGestionCajeros
-            // 
-            this.btnGestionCajeros.Location = new System.Drawing.Point(50, 160);
-            this.btnGestionCajeros.Name = "btnGestionCajeros";
-            this.btnGestionCajeros.Size = new System.Drawing.Size(300, 40);
-            this.btnGestionCajeros.TabIndex = 2;
-            this.btnGestionCajeros.Text = "Gestión de Cajeros";
-            this.btnGestionCajeros.UseVisualStyleBackColor = true;
-            // 
-            // btnGestionServicios
-            // 
-            this.btnGestionServicios.Location = new System.Drawing.Point(50, 220);
-            this.btnGestionServicios.Name = "btnGestionServicios";
-            this.btnGestionServicios.Size = new System.Drawing.Size(300, 40);
-            this.btnGestionServicios.TabIndex = 3;
-            this.btnGestionServicios.Text = "Gestión de Servicios";
-            this.btnGestionServicios.UseVisualStyleBackColor = true;
-            // 
-            // btnConfigurarVentanillas
-            // 
-            this.btnConfigurarVentanillas.Location = new System.Drawing.Point(50, 280);
-            this.btnConfigurarVentanillas.Name = "btnConfigurarVentanillas";
-            this.btnConfigurarVentanillas.Size = new System.Drawing.Size(300, 40);
-            this.btnConfigurarVentanillas.TabIndex = 4;
-            this.btnConfigurarVentanillas.Text = "Configuración de Ventanillas";
-            this.btnConfigurarVentanillas.UseVisualStyleBackColor = true;
-            // 
-            // btnIniciarSimulacion
-            // 
-            this.btnIniciarSimulacion.Location = new System.Drawing.Point(50, 340);
-            this.btnIniciarSimulacion.Name = "btnIniciarSimulacion";
-            this.btnIniciarSimulacion.Size = new System.Drawing.Size(300, 40);
-            this.btnIniciarSimulacion.TabIndex = 5;
-            this.btnIniciarSimulacion.Text = "Iniciar Simulación Gráfica";
-            this.btnIniciarSimulacion.UseVisualStyleBackColor = true;
-            // 
-            // btnGenerarReportes
-            // 
-            this.btnGenerarReportes.Location = new System.Drawing.Point(50, 400);
-            this.btnGenerarReportes.Name = "btnGenerarReportes";
-            this.btnGenerarReportes.Size = new System.Drawing.Size(300, 40);
-            this.btnGenerarReportes.TabIndex = 6;
-            this.btnGenerarReportes.Text = "Generar Reportes";
-            this.btnGenerarReportes.UseVisualStyleBackColor = true;
+            btnCargarDatos.Location = new Point(500, 156);
+            btnCargarDatos.Margin = new Padding(4, 5, 4, 5);
+            btnCargarDatos.Name = "btnCargarDatos";
+            btnCargarDatos.Size = new Size(375, 62);
+            btnCargarDatos.TabIndex = 8;
+            btnCargarDatos.Text = "Cargar Datos desde CSV";
+            btnCargarDatos.UseVisualStyleBackColor = true;
             // 
             // btnSalir
             // 
-            this.btnSalir.Location = new System.Drawing.Point(50, 460);
-            this.btnSalir.Name = "btnSalir";
-            this.btnSalir.Size = new System.Drawing.Size(300, 40);
-            this.btnSalir.TabIndex = 7;
-            this.btnSalir.Text = "Salir";
-            this.btnSalir.UseVisualStyleBackColor = true;
+            btnSalir.Location = new Point(62, 719);
+            btnSalir.Margin = new Padding(4, 5, 4, 5);
+            btnSalir.Name = "btnSalir";
+            btnSalir.Size = new Size(375, 62);
+            btnSalir.TabIndex = 7;
+            btnSalir.Text = "Salir";
+            btnSalir.UseVisualStyleBackColor = true;
+            // 
+            // btnGenerarReportes
+            // 
+            btnGenerarReportes.Location = new Point(62, 625);
+            btnGenerarReportes.Margin = new Padding(4, 5, 4, 5);
+            btnGenerarReportes.Name = "btnGenerarReportes";
+            btnGenerarReportes.Size = new Size(375, 62);
+            btnGenerarReportes.TabIndex = 6;
+            btnGenerarReportes.Text = "Generar Reportes";
+            btnGenerarReportes.UseVisualStyleBackColor = true;
+            // 
+            // btnIniciarSimulacion
+            // 
+            btnIniciarSimulacion.Location = new Point(62, 531);
+            btnIniciarSimulacion.Margin = new Padding(4, 5, 4, 5);
+            btnIniciarSimulacion.Name = "btnIniciarSimulacion";
+            btnIniciarSimulacion.Size = new Size(375, 62);
+            btnIniciarSimulacion.TabIndex = 5;
+            btnIniciarSimulacion.Text = "Iniciar Simulación Gráfica";
+            btnIniciarSimulacion.UseVisualStyleBackColor = true;
+            // 
+            // btnConfigurarVentanillas
+            // 
+            btnConfigurarVentanillas.Location = new Point(62, 438);
+            btnConfigurarVentanillas.Margin = new Padding(4, 5, 4, 5);
+            btnConfigurarVentanillas.Name = "btnConfigurarVentanillas";
+            btnConfigurarVentanillas.Size = new Size(375, 62);
+            btnConfigurarVentanillas.TabIndex = 4;
+            btnConfigurarVentanillas.Text = "Configuración de Ventanillas";
+            btnConfigurarVentanillas.UseVisualStyleBackColor = true;
+            // 
+            // btnGestionServicios
+            // 
+            btnGestionServicios.Location = new Point(62, 344);
+            btnGestionServicios.Margin = new Padding(4, 5, 4, 5);
+            btnGestionServicios.Name = "btnGestionServicios";
+            btnGestionServicios.Size = new Size(375, 62);
+            btnGestionServicios.TabIndex = 3;
+            btnGestionServicios.Text = "Gestión de Servicios";
+            btnGestionServicios.UseVisualStyleBackColor = true;
+            // 
+            // btnGestionCajeros
+            // 
+            btnGestionCajeros.Location = new Point(62, 250);
+            btnGestionCajeros.Margin = new Padding(4, 5, 4, 5);
+            btnGestionCajeros.Name = "btnGestionCajeros";
+            btnGestionCajeros.Size = new Size(375, 62);
+            btnGestionCajeros.TabIndex = 2;
+            btnGestionCajeros.Text = "Gestión de Cajeros";
+            btnGestionCajeros.UseVisualStyleBackColor = true;
+            // 
+            // btnGestionClientes
+            // 
+            btnGestionClientes.Location = new Point(62, 156);
+            btnGestionClientes.Margin = new Padding(4, 5, 4, 5);
+            btnGestionClientes.Name = "btnGestionClientes";
+            btnGestionClientes.Size = new Size(375, 62);
+            btnGestionClientes.TabIndex = 1;
+            btnGestionClientes.Text = "Gestión de Clientes";
+            btnGestionClientes.UseVisualStyleBackColor = true;
+            // 
+            // lblTitulo
+            // 
+            lblTitulo.Dock = DockStyle.Top;
+            lblTitulo.Font = new Font("Arial", 16F, FontStyle.Bold);
+            lblTitulo.Location = new Point(25, 31);
+            lblTitulo.Margin = new Padding(4, 0, 4, 0);
+            lblTitulo.Name = "lblTitulo";
+            lblTitulo.Size = new Size(950, 78);
+            lblTitulo.TabIndex = 0;
+            lblTitulo.Text = "Menú Principal";
+            lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // btnTransacciones
+            // 
+            btnTransacciones.Location = new Point(500, 250);
+            btnTransacciones.Margin = new Padding(4, 5, 4, 5);
+            btnTransacciones.Name = "btnTransacciones";
+            btnTransacciones.Size = new Size(375, 62);
+            btnTransacciones.TabIndex = 9;
+            btnTransacciones.Text = "Transacciones Manuales";
+            btnTransacciones.UseVisualStyleBackColor = true;
             // 
             // FormMenuPrincipal
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 600);
-            this.Controls.Add(this.panelPrincipal);
-            this.Name = "FormMenuPrincipal";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Sistema de Gestión - Banco 'Tu Plata es Mía'";
-            this.panelPrincipal.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1000, 938);
+            Controls.Add(panelPrincipal);
+            Margin = new Padding(4, 5, 4, 5);
+            Name = "FormMenuPrincipal";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Sistema de Gestión - Banco 'Tu Plata es Mía'";
+            panelPrincipal.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion

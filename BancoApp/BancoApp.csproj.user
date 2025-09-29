@@ -28,7 +28,13 @@
     <Compile Update="FormReportes.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="FormSeleccionTransaccion.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="FormSimulacion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormTransaccion.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

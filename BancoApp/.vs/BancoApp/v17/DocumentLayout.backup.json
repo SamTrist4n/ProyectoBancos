@@ -3,12 +3,40 @@
   "WorkspaceRootPath": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\formsimulacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:formsimulacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\formmenuprincipal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:formmenuprincipal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\formsimulacion.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:formsimulacion.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\formmenuprincipal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:formmenuprincipal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\formmenuprincipal.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:formmenuprincipal.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\formselecciontransaccion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:formselecciontransaccion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\formselecciontransaccion.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:formselecciontransaccion.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\formtransaccion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:formtransaccion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\formtransaccion.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:formtransaccion.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\sistemabanco.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:sistemabanco.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|c:\\users\\dell\\onedrive\\documentos\\github\\bancoapp\\bancoapp\\modelos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB4DFBE6-55FF-4B84-9757-B43A84FC5B5D}|BancoApp.csproj|solutionrelative:modelos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,27 +51,117 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "FormSimulacion.cs",
-              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormSimulacion.cs",
-              "RelativeDocumentMoniker": "FormSimulacion.cs",
-              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormSimulacion.cs",
-              "RelativeToolTip": "FormSimulacion.cs",
-              "ViewState": "AgIAAPIAAAAAAAAAAAAAAOQAAAAoAAAAAAAAAA==",
+              "Title": "FormMenuPrincipal.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormMenuPrincipal.cs",
+              "RelativeDocumentMoniker": "FormMenuPrincipal.cs",
+              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormMenuPrincipal.cs [Dise\u00F1o]",
+              "RelativeToolTip": "FormMenuPrincipal.cs [Dise\u00F1o]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-28T14:32:19.75Z",
+              "WhenOpened": "2025-09-29T01:30:02.198Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "FormSeleccionTransaccion.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormSeleccionTransaccion.cs",
+              "RelativeDocumentMoniker": "FormSeleccionTransaccion.cs",
+              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormSeleccionTransaccion.cs",
+              "RelativeToolTip": "FormSeleccionTransaccion.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAiwB8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-29T01:28:14.962Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "FormSeleccionTransaccion.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormSeleccionTransaccion.Designer.cs",
+              "RelativeDocumentMoniker": "FormSeleccionTransaccion.Designer.cs",
+              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormSeleccionTransaccion.Designer.cs",
+              "RelativeToolTip": "FormSeleccionTransaccion.Designer.cs",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAiwEwAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-29T01:27:48.108Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FormMenuPrincipal.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormMenuPrincipal.Designer.cs",
+              "RelativeDocumentMoniker": "FormMenuPrincipal.Designer.cs",
+              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormMenuPrincipal.Designer.cs",
+              "RelativeToolTip": "FormMenuPrincipal.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEcAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-29T01:15:37.387Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "FormSimulacion.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormSimulacion.Designer.cs",
-              "RelativeDocumentMoniker": "FormSimulacion.Designer.cs",
-              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormSimulacion.Designer.cs",
-              "RelativeToolTip": "FormSimulacion.Designer.cs",
-              "ViewState": "AgIAAJgAAAAAAAAAAAAAAKAAAAAfAAAAAAAAAA==",
+              "Title": "FormMenuPrincipal.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormMenuPrincipal.cs",
+              "RelativeDocumentMoniker": "FormMenuPrincipal.cs",
+              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormMenuPrincipal.cs",
+              "RelativeToolTip": "FormMenuPrincipal.cs",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAAAFkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-28T14:32:13.18Z",
+              "WhenOpened": "2025-09-29T01:15:32.618Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "SistemaBanco.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\SistemaBanco.cs",
+              "RelativeDocumentMoniker": "SistemaBanco.cs",
+              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\SistemaBanco.cs",
+              "RelativeToolTip": "SistemaBanco.cs",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAAAG0AAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-29T00:29:48.804Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FormTransaccion.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormTransaccion.Designer.cs",
+              "RelativeDocumentMoniker": "FormTransaccion.Designer.cs",
+              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormTransaccion.Designer.cs",
+              "RelativeToolTip": "FormTransaccion.Designer.cs",
+              "ViewState": "AgIAAI4AAAAAAAAAAAAiwJsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-29T00:28:19.256Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "FormTransaccion.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormTransaccion.cs",
+              "RelativeDocumentMoniker": "FormTransaccion.cs",
+              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\FormTransaccion.cs",
+              "RelativeToolTip": "FormTransaccion.cs",
+              "ViewState": "AgIAAHEAAAAAAAAAAAAiwH0AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-29T00:27:58.139Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Modelos.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\Modelos.cs",
+              "RelativeDocumentMoniker": "Modelos.cs",
+              "ToolTip": "C:\\Users\\DELL\\OneDrive\\Documentos\\GitHub\\BancoApp\\BancoApp\\Modelos.cs",
+              "RelativeToolTip": "Modelos.cs",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAAAEoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-29T00:32:36.735Z",
               "EditorCaption": ""
             }
           ]

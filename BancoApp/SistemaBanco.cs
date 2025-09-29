@@ -82,11 +82,146 @@ namespace BancoApp
             return nroTicket;
         }
 
-        private string GenerarNumeroTicket()
+        public string GenerarNumeroTicket()
         {
             return "TKT-" + contadorTickets++.ToString("D6");
         }
 
+        public void CargarClientesDesdeCSV(string rutaArchivo)
+        {
+            try
+            {
+                Clientes = new ListaRecursiva<Cliente>();
+
+                using (StreamReader reader = new StreamReader(rutaArchivo))
+                {
+                    string linea;
+                    bool primeraLinea = true;
+
+                    while ((linea = reader.ReadLine()) != null)
+                    {
+                        if (primeraLinea)
+                        {
+                            primeraLinea = false;
+                            continue;
+                        }
+
+                        string[] datos = linea.Split(',');
+                        if (datos.Length >= 7) // Ajusta según tu CSV
+                        {
+                            var cliente = new Cliente
+                            {
+                                DNI = datos[0],
+                                Nombres = datos[1],
+                                Email = datos[5],
+                                Telefono = datos[6],
+                                FechaNacimiento = DateTime.Parse(datos[2]),
+                                Discapacidad = bool.Parse(datos[3]),
+                                Niños = int.Parse(datos[4]),
+                                Monto = decimal.Parse(datos[7])
+                            };
+
+                            Clientes.Agregar(cliente);
+                        }
+                    }
+                }
+
+                MessageBox.Show($"Se cargaron {Clientes.ObtenerTodos().Count} clientes desde CSV",
+                              "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar clientes: {ex.Message}",
+                              "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void CargarVentanillasDesdeCSV(string rutaArchivo)
+        {
+            try
+            {
+                Ventanillas.Clear();
+
+                using (StreamReader reader = new StreamReader(rutaArchivo))
+                {
+                    string linea;
+                    bool primeraLinea = true;
+
+                    while ((linea = reader.ReadLine()) != null)
+                    {
+                        if (primeraLinea)
+                        {
+                            primeraLinea = false;
+                            continue;
+                        }
+
+                        string[] datos = linea.Split(',');
+                        if (datos.Length >= 6)
+                        {
+                            var ventanilla = new Ventanilla
+                            {
+                                NroVentanilla = int.Parse(datos[0]),
+                                Preferencial = bool.Parse(datos[4]),
+                                DNICliente = datos[2],  
+                                DNICajero = datos[1],
+                                NroTicket = datos[3],   
+                                Atendido = bool.Parse(datos[5]),
+                                TiempoRestante = datos.Length > 6 ? int.Parse(datos[6]) : 0
+                            };
+
+                            Ventanillas.Add(ventanilla);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al cargar ventanillas: {ex.Message}");
+            }
+        }
+
+        // Método para cargar cajeros desde CSV
+        public void CargarCajerosDesdeCSV(string rutaArchivo)
+        {
+            try
+            {
+                Cajeros = new ListaRecursiva<Cajero>();
+
+                using (StreamReader reader = new StreamReader(rutaArchivo))
+                {
+                    string linea;
+                    bool primeraLinea = true;
+
+                    while ((linea = reader.ReadLine()) != null)
+                    {
+                        if (primeraLinea)
+                        {
+                            primeraLinea = false;
+                            continue;
+                        }
+
+                        string[] datos = linea.Split(',');
+                        if (datos.Length >= 5)
+                        {
+                            var cajero = new Cajero
+                            {
+                                DNI = datos[0],
+                                Nombres = datos[1],
+                                Direccion = datos[2],
+                                Email = datos[3],
+                                Telefono = datos[4]
+                            };
+
+                            Cajeros.Agregar(cajero);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al cargar cajeros: {ex.Message}");
+            }
+        }
         public void ProcesarAtenciones()
         {
             // Primero, procesar clientes en ventanillas que ya están siendo atendidos

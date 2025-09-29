@@ -35,3 +35,5 @@ C:\Users\DELL\OneDrive\Documentos\GitHub\BancoApp\BancoApp\obj\Debug\net8.0-wind
 C:\Users\DELL\OneDrive\Documentos\GitHub\BancoApp\BancoApp\obj\Debug\net8.0-windows\BancoApp.pdb
 C:\Users\DELL\OneDrive\Documentos\GitHub\BancoApp\BancoApp\obj\Debug\net8.0-windows\BancoApp.genruntimeconfig.cache
 C:\Users\DELL\OneDrive\Documentos\GitHub\BancoApp\BancoApp\obj\Debug\net8.0-windows\ref\BancoApp.dll
+C:\Users\DELL\OneDrive\Documentos\GitHub\BancoApp\BancoApp\obj\Debug\net8.0-windows\BancoApp.FormTransaccion.resources
+C:\Users\DELL\OneDrive\Documentos\GitHub\BancoApp\BancoApp\obj\Debug\net8.0-windows\BancoApp.FormSeleccionTransaccion.resources

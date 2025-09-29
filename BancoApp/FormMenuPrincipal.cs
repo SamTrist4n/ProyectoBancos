@@ -24,6 +24,7 @@ namespace BancoApp
             this.btnGenerarReportes.Click += btnGenerarReportes_Click;
             this.btnSalir.Click += btnSalir_Click;
             this.btnCargarDatos.Click += btnCargarDatos_Click;
+            this.btnTransacciones.Click += btnTransacciones_Click;
         }
 
         private void btnGestionClientes_Click(object sender, EventArgs e)
@@ -77,6 +78,12 @@ namespace BancoApp
                 MessageBox.Show($"Error al cargar los archivos CSV:\n{ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnTransacciones_Click(object sender, EventArgs e)
+        {
+            FormSeleccionTransaccion form = new FormSeleccionTransaccion(sistema);
+            form.ShowDialog();
         }
 
         private void btnSalir_Click(object sender, EventArgs e)
