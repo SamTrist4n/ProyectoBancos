@@ -20,6 +20,10 @@ namespace ProyectoColasBanco
             MostrarMenu();
         }
 
+        //agreguemos los archivos csv dentro del proyecto en github, no lo tengo descargado xd
+        //cosa que si se clona el proyecto , se copien los archivos csv a la carpeta bin
+        //y no tendremos que descargar uno por uno aparte
+
         static void CargarCsvInicial()
         {
             Console.WriteLine("Buscando CSV en carpeta de ejecución: " + AppDomain.CurrentDomain.BaseDirectory);
