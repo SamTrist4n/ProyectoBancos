@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Net.Http; 
 
 namespace ProyectoColasBanco
 {
@@ -65,6 +66,7 @@ namespace ProyectoColasBanco
                 Console.WriteLine("14. Exportar reporte ventanillas");
                 Console.WriteLine("15. Recargar CSVs (desde bin)");
                 Console.WriteLine("16. Simulación gráfica (con cola y ventanillas)");
+                Console.WriteLine("17. Descargar archivos CSV necesarios"); // Nueva opción
                 Console.WriteLine("0. Salir");
                 Console.Write("Opción: ");
 
@@ -94,6 +96,7 @@ namespace ProyectoColasBanco
                         case 14: ExportarVentanillas(); break;
                         case 15: CargarCsvInicial(); break;
                         case 16: IniciarSimulacionGrafica(); break;
+                        case 17: DescargarCsvs(); break; // Llama al nuevo método
                         case 0: break;
                         default: Console.WriteLine("Opción no válida."); break;
                     }
@@ -104,6 +107,43 @@ namespace ProyectoColasBanco
                 }
 
             } while (opcion != 0);
+        }
+
+        // Nuevo método para descargar los CSVs necesarios
+        static void DescargarCsvs()
+        {
+            var archivos = new Dictionary<string, string>
+            {
+                { "clientes.csv", "https://raw.githubusercontent.com/SamTrist4n/ProyectoBancos/main/Clientes.csv" },
+                { "cajeros.csv", "https://raw.githubusercontent.com/SamTrist4n/ProyectoBancos/main/Cajeros.csv" },
+                { "servicios.csv", "https://raw.githubusercontent.com/SamTrist4n/ProyectoBancos/main/Servicios.csv" },
+                { "ventanillas.csv", "https://raw.githubusercontent.com/SamTrist4n/ProyectoBancos/main/Ventanillas.csv" },
+                { "atenciones.csv", "https://raw.githubusercontent.com/SamTrist4n/ProyectoBancos/main/Atenciones.csv" }
+            };
+
+            string carpetaBin = AppDomain.CurrentDomain.BaseDirectory;
+            using (var http = new HttpClient())
+            {
+                foreach (var kvp in archivos)
+                {
+                    string destino = Path.Combine(carpetaBin, kvp.Key);
+                    try
+                    {
+                        Console.WriteLine($"Descargando {kvp.Key}...");
+                        var contenido = http.GetByteArrayAsync(kvp.Value).GetAwaiter().GetResult();
+                        File.WriteAllBytes(destino, contenido);
+                        Console.WriteLine($"Archivo {kvp.Key} guardado en {destino}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error al descargar {kvp.Key}: {ex.Message}");
+                    }
+                }
+            }
+            Console.WriteLine("Descarga de archivos CSV completada.");
+            Console.WriteLine("Presiona una tecla para volver al menú...");
+            Console.ReadKey(true);
+            Console.Clear(); // Limpia la pantalla antes de mostrar el menú de nuevo
         }
 
         #region Registrar
@@ -352,27 +392,30 @@ namespace ProyectoColasBanco
             SafeWriteAt(titulo.PadRight(width), left, top);
             SafeWriteAt("[" + " ".PadRight(width - 2) + "]", left, top + 1);
 
-            // intentar snapshot
             var snapshot = TryGetColaSnapshot(colaObj);
-            if (snapshot != null)
+            if (snapshot != null && snapshot.Any())
             {
                 var list = snapshot.Take(MaxMostrarCola).ToList();
-                for (int i = 0; i < MaxMostrarCola; i++)
+                for (int i = 0; i < list.Count; i++)
                 {
-                    string text = i < list.Count ? $"{i + 1}. {Truncate(list[i].DNI + " " + list[i].Nombres, width - 4)}" : "";
+                    // Muestra el número en la cola, el DNI y el nombre
+                    string text = $"{i + 1}. {Truncate(list[i].DNI + " " + list[i].Nombres, width - 4)}";
                     SafeWriteAt(text.PadRight(width), left, top + 2 + i);
                 }
-                SafeWriteAt($"Total: {snapshot.Count()}".PadRight(width), left, top + 2 + MaxMostrarCola);
+                // Si hay menos clientes que MaxMostrarCola, rellena el espacio
+                for (int i = list.Count; i < MaxMostrarCola; i++)
+                    SafeWriteAt("".PadRight(width), left, top + 2 + i);
+
+                SafeWriteAt($"Total en cola: {snapshot.Count()}".PadRight(width), left, top + 2 + MaxMostrarCola);
             }
             else
             {
-                int count = TryGetColaCount(colaObj);
-                for (int i = 0; i < MaxMostrarCola; i++) SafeWriteAt("".PadRight(width), left, top + 2 + i);
-                SafeWriteAt($"Total: {count}".PadRight(width), left, top + 2 + MaxMostrarCola);
+                for (int i = 0; i < MaxMostrarCola; i++)
+                    SafeWriteAt("".PadRight(width), left, top + 2 + i);
+                SafeWriteAt("Sin clientes en espera".PadRight(width), left, top + 2 + MaxMostrarCola);
             }
         }
 
-        // intenta varios métodos/properties para obtener snapshot (ObtenerTodos, ToArray, ToList, internal)
         static IEnumerable<Cliente> TryGetColaSnapshot(object cola)
         {
             try
@@ -498,6 +541,7 @@ namespace ProyectoColasBanco
             catch { }
 
             foreach (var v in sistema.Ventanillas) v.Liberar();
+            sistema.Ventanillas.Clear();
         }
     }
 }
