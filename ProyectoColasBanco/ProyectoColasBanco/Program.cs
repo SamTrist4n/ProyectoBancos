@@ -1,11 +1,12 @@
 ﻿// Program.cs
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
+using System.Net.Http; 
 using System.Text;
 using System.Threading;
-using System.Net.Http; 
+using System.Threading.Tasks;
 
 namespace ProyectoColasBanco
 {
@@ -95,8 +96,8 @@ namespace ProyectoColasBanco
                         case 13: ExportarTransacciones(); break;
                         case 14: ExportarVentanillas(); break;
                         case 15: CargarCsvInicial(); break;
-                        case 16: IniciarSimulacionGrafica(); break;
-                        case 17: DescargarCsvs(); break; // Llama al nuevo método
+                        case 16: Simulacion.Run(sistema); break;
+                        case 17: DescargarCsvs(); break; 
                         case 0: break;
                         default: Console.WriteLine("Opción no válida."); break;
                     }
@@ -267,281 +268,194 @@ namespace ProyectoColasBanco
         }
         #endregion
 
-        static void IniciarSimulacionGrafica()
+        public static class Simulacion
         {
-            Console.WriteLine("Iniciando simulación gráfica... (P pausa/resume, A llegada forzada, C limpiar, Esc salir)");
-            SimulacionConsola.Run(sistema);
-        }
-    }
+            public static int TickMs = 800;      // ms por tick
+            public static double ProbLlegada = 1.0;
 
-    public static class SimulacionConsola
-    {
-        public static int TickMs = 700;           // duración de cada tick (ms)
-        public static double ProbabilidadLlegada = 0.5; // probabilidad de llegada por tick
-        public static int MaxMostrarCola = 8;
-
-        public static void Run(SistemaBanco sistema)
-        {
-            if (sistema == null) throw new ArgumentNullException(nameof(sistema));
-
-            var rnd = new Random();
-            bool running = true;
-            bool paused = false;
-
-            Console.Clear();
-            Console.CursorVisible = false;
-
-            PrintControls();
-
-            while (running)
+            public static void Run(SistemaBanco sistema)
             {
-                if (!paused)
+                if (sistema == null) throw new ArgumentNullException(nameof(sistema));
+
+                var rnd = new Random();
+                bool running = true;
+                bool paused = false;
+
+                Console.Clear();
+                Console.WriteLine("SIMULACIÓN SIMPLE (ultra) - Presiona Esc para volver al menú");
+                Console.WriteLine("Controles: P = Pausa/Resume   A = Llegada forzada");
+                Thread.Sleep(800);
+
+                while (running)
                 {
-                    // generar llegada aleatoria
-                    if (rnd.NextDouble() <= ProbabilidadLlegada)
+                    while (Console.KeyAvailable)
                     {
-                        GenerarLlegadaAleatoria(sistema, rnd);
+                        var k = Console.ReadKey(true).Key;
+                        if (k == ConsoleKey.Escape) { running = false; break; }
+                        if (k == ConsoleKey.P) { paused = !paused; }
+                        if (k == ConsoleKey.A) { GenerarLlegada(sistema, rnd, true); }
+                    }
+                    if (!running) break;
+
+                    if (!paused)
+                    {
+                        if (rnd.NextDouble() < ProbLlegada) GenerarLlegada(sistema, rnd, false);
+
+                        // Lógica robusta de procesamiento de atenciones
+                        ProcesarAtencionesRobusto(sistema);
                     }
 
-                    // procesar atenciones (actualiza tiempos y asignaciones)
-                    sistema.ProcesarAtenciones();
+                    Console.Clear();
+                    Console.WriteLine("SIMULACIÓN SIMPLE (ultra)");
+                    Console.WriteLine("Controles: P = Pausa/Resume   A = Llegada forzada   Esc = Salir");
+                    Console.WriteLine(paused ? "*** PAUSADO ***" : "*** EN EJECUCIÓN ***");
+                    Console.WriteLine();
+
+                    Console.WriteLine("Ventanillas:");
+                    if (sistema.Ventanillas.Count == 0)
+                    {
+                        Console.WriteLine("  (No hay ventanillas configuradas)");
+                    }
+                    else
+                    {
+                        foreach (var v in sistema.Ventanillas)
+                        {
+                            string caj = string.IsNullOrWhiteSpace(v.DNICajero) ? "-" : v.DNICajero;
+                            string cli = string.IsNullOrWhiteSpace(v.DNICliente) ? "-" : v.DNICliente;
+                            string tck = string.IsNullOrWhiteSpace(v.NroTicket) ? "-" : v.NroTicket;
+                            Console.WriteLine($"  V{v.NroVentanilla} | Cajero: {caj} | Cliente: {cli} | Ticket: {tck} | Pref: {(v.Preferencial ? "S" : "N")} | TR: {v.TiempoRestante}s");
+                        }
+                    }
+
+                    Console.WriteLine();
+                    int prefCount = TryGetColaCountSafe(sistema.ColaPreferencial);
+                    int normCount = TryGetColaCountSafe(sistema.ColaNormal);
+                    Console.WriteLine($"Cola preferencial: {prefCount}   |   Cola normal: {normCount}");
+
+                    var totalAt = sistema.Atenciones.ObtenerTodos()?.Count() ?? 0;
+                    Console.WriteLine($"Atenciones registradas: {totalAt}");
+
+                    Console.WriteLine();
+                    Console.WriteLine($"Tick every {TickMs} ms. Hora: {DateTime.Now:HH:mm:ss}");
+                    Thread.Sleep(TickMs);
                 }
 
-                RenderEstado(sistema);
+                Console.WriteLine("\nSaliendo de la simulación. Presiona una tecla para continuar...");
+                Console.ReadKey(true);
+            }
 
-                // manejo de teclas
-                while (Console.KeyAvailable)
+            // Lógica robusta de procesamiento de atenciones
+            private static void ProcesarAtencionesRobusto(SistemaBanco sistema)
+            {
+                // 1. Actualizar tiempos y liberar ventanillas si corresponde
+                foreach (var ventanilla in sistema.Ventanillas)
                 {
-                    var key = Console.ReadKey(true).Key;
-                    if (key == ConsoleKey.Escape) { running = false; break; }
-                    if (key == ConsoleKey.P) { paused = !paused; PrintPauseStatus(paused); }
-                    if (key == ConsoleKey.A) { GenerarLlegadaAleatoria(sistema, rnd, true); RenderEstado(sistema); }
-                    if (key == ConsoleKey.C) { ClearQueuesAndVentanillas(sistema); }
+                    if (ventanilla.Atendido && !string.IsNullOrEmpty(ventanilla.DNICliente))
+                    {
+                        ventanilla.TiempoRestante--;
+                        if (ventanilla.TiempoRestante <= 0)
+                        {
+                            ventanilla.Liberar();
+                        }
+                    }
                 }
 
-                Thread.Sleep(TickMs);
-            }
-
-            Console.CursorVisible = true;
-            Console.WriteLine("\nSimulación finalizada. Presiona una tecla...");
-            Console.ReadKey(true);
-        }
-
-        static void PrintControls()
-        {
-            Console.SetCursorPosition(0, 0);
-            Console.WriteLine("SIMULACIÓN - BANCO (Esc sale)");
-            Console.WriteLine("[P] Pausa/Resume   [A] Forzar llegada   [C] Limpiar colas");
-            Console.WriteLine();
-        }
-
-        static void PrintPauseStatus(bool paused)
-        {
-            Console.SetCursorPosition(0, 3);
-            Console.WriteLine(paused ? "PAUSADO".PadRight(80) : "EN EJECUCIÓN".PadRight(80));
-        }
-
-        static void RenderEstado(SistemaBanco sistema)
-        {
-            int top = 4;
-            int colWidth = 36;
-            var ventanillas = sistema.Ventanillas;
-            int perRow = Math.Max(1, Console.WindowWidth / (colWidth + 2));
-            int row = 0;
-            for (int i = 0; i < ventanillas.Count; i++)
-            {
-                int colIndex = i % perRow;
-                row = i / perRow;
-                int x = colIndex * (colWidth + 2);
-                int y = top + row * 7;
-                DrawVentanillaBox(ventanillas[i], x, y, colWidth);
-            }
-
-            int afterVentasRows = (ventanillas.Count + perRow - 1) / perRow;
-            int colaTop = top + Math.Max(1, afterVentasRows) * 7 + 1;
-
-            DrawCola("COLA PREFERENCIAL", sistema.ColaPreferencial, colaTop, 0, Console.WindowWidth / 2 - 1);
-            DrawCola("COLA NORMAL      ", sistema.ColaNormal, colaTop, Console.WindowWidth / 2 + 1, Console.WindowWidth / 2 - 2);
-
-            int statsTop = colaTop + 8;
-            DrawStats(sistema, statsTop, 0);
-        }
-
-        static void DrawVentanillaBox(Ventanilla v, int x, int y, int width)
-        {
-            for (int i = 0; i < 6; i++) SafeWriteAt(new string(' ', width), x, y + i);
-
-            SafeWriteAt("+" + new string('-', width - 2) + "+", x, y);
-            SafeWriteAt("|" + CenterText($"Ventanilla {v.NroVentanilla}", width - 2) + "|", x, y + 1);
-
-            string cajero = string.IsNullOrWhiteSpace(v.DNICajero) ? "(sin cajero)" : v.DNICajero;
-            SafeWriteAt("| Cajero: " + Truncate(cajero, width - 11).PadRight(width - 11) + "|", x, y + 2);
-
-            string cliente = string.IsNullOrWhiteSpace(v.DNICliente) ? "(libre)" : v.DNICliente;
-            string ticket = string.IsNullOrWhiteSpace(v.NroTicket) ? "" : v.NroTicket;
-            SafeWriteAt("| Cliente: " + Truncate(cliente + " " + ticket, width - 11).PadRight(width - 11) + "|", x, y + 3);
-
-            string pref = v.Preferencial ? "S" : "N";
-            SafeWriteAt("| Pref: " + pref.PadRight(4) + " Tiempo: " + v.TiempoRestante.ToString().PadLeft(3) + "s" + new string(' ', Math.Max(0, width - 28)) + "|", x, y + 4);
-
-            SafeWriteAt("+" + new string('-', width - 2) + "+", x, y + 5);
-        }
-
-        static void DrawCola(string titulo, object colaObj, int top, int left, int width)
-        {
-            SafeWriteAt(titulo.PadRight(width), left, top);
-            SafeWriteAt("[" + " ".PadRight(width - 2) + "]", left, top + 1);
-
-            var snapshot = TryGetColaSnapshot(colaObj);
-            if (snapshot != null && snapshot.Any())
-            {
-                var list = snapshot.Take(MaxMostrarCola).ToList();
-                for (int i = 0; i < list.Count; i++)
+                // 2. Asignar clientes a ventanillas libres
+                foreach (var ventanilla in sistema.Ventanillas)
                 {
-                    // Muestra el número en la cola, el DNI y el nombre
-                    string text = $"{i + 1}. {Truncate(list[i].DNI + " " + list[i].Nombres, width - 4)}";
-                    SafeWriteAt(text.PadRight(width), left, top + 2 + i);
+                    if (!ventanilla.Atendido || string.IsNullOrEmpty(ventanilla.DNICliente))
+                    {
+                        Cliente cliente = null;
+                        int prioridad = 0;
+                        // Preferencial primero si la ventanilla es preferencial
+                        if (ventanilla.Preferencial && !sistema.ColaPreferencial.EstaVacia())
+                        {
+                            cliente = sistema.ColaPreferencial.Desencolar();
+                            prioridad = 1;
+                        }
+                        // Si no, normal
+                        else if (!sistema.ColaNormal.EstaVacia())
+                        {
+                            cliente = sistema.ColaNormal.Desencolar();
+                            prioridad = 3;
+                        }
+                        // Si la ventanilla es normal y la preferencial tiene clientes, también puede atenderlos
+                        else if (!ventanilla.Preferencial && !sistema.ColaPreferencial.EstaVacia())
+                        {
+                            cliente = sistema.ColaPreferencial.Desencolar();
+                            prioridad = 2;
+                        }
+
+                        if (cliente != null)
+                        {
+                            string nroTicket = "TKT-" + DateTime.Now.Ticks.ToString().Substring(8); // Genera un ticket único
+                            int tiempoAtencion = cliente.CalcularTiempoAtencion();
+                            ventanilla.AsignarCliente(cliente.DNI, nroTicket, tiempoAtencion);
+
+                            // Registrar la atención
+                            var servicio = sistema.Servicios.ObtenerTodos().FirstOrDefault() ?? new Servicio { IdServicio = "RET", Descripcion = "Retiro" };
+                            var atencion = new Atencion
+                            {
+                                NroTicket = nroTicket,
+                                FechaHora = DateTime.Now,
+                                IdCliente = cliente.DNI,
+                                IdCajero = ventanilla.DNICajero,
+                                IdServicio = servicio.IdServicio,
+                                Monto = cliente.Monto,
+                                Segundos = tiempoAtencion
+                            };
+                            sistema.Atenciones.Agregar(atencion);
+                        }
+                    }
                 }
-                // Si hay menos clientes que MaxMostrarCola, rellena el espacio
-                for (int i = list.Count; i < MaxMostrarCola; i++)
-                    SafeWriteAt("".PadRight(width), left, top + 2 + i);
-
-                SafeWriteAt($"Total en cola: {snapshot.Count()}".PadRight(width), left, top + 2 + MaxMostrarCola);
             }
-            else
-            {
-                for (int i = 0; i < MaxMostrarCola; i++)
-                    SafeWriteAt("".PadRight(width), left, top + 2 + i);
-                SafeWriteAt("Sin clientes en espera".PadRight(width), left, top + 2 + MaxMostrarCola);
-            }
-        }
 
-        static IEnumerable<Cliente> TryGetColaSnapshot(object cola)
-        {
-            try
+            static int TryGetColaCountSafe(object cola)
             {
-                if (cola == null) return null;
-                if (cola is IEnumerable<Cliente> en) return en.ToList();
-
-                var miObtener = cola.GetType().GetMethod("ObtenerTodos");
-                if (miObtener != null)
+                try
                 {
-                    var res = miObtener.Invoke(cola, null) as IEnumerable<Cliente>;
-                    return res?.ToList();
+                    if (cola == null) return 0;
+                    var miTamaño = cola.GetType().GetMethod("Tamaño") ?? cola.GetType().GetMethod("Count");
+                    if (miTamaño != null) return (int)miTamaño.Invoke(cola, null);
+                    var prop = cola.GetType().GetProperty("Count");
+                    if (prop != null) return (int)prop.GetValue(cola);
                 }
-
-                var miToArray = cola.GetType().GetMethod("ToArray");
-                if (miToArray != null)
-                {
-                    var arr = miToArray.Invoke(cola, null) as Cliente[];
-                    return arr?.ToList();
-                }
-
-                // Try method that returns array via reflection "ToList" or "ToArray" elsewhere
-                return null;
-            }
-            catch { return null; }
-        }
-
-        static int TryGetColaCount(object cola)
-        {
-            try
-            {
-                var miTamaño = cola.GetType().GetMethod("Tamaño");
-                if (miTamaño != null) return (int)miTamaño.Invoke(cola, null);
-
-                var propCount = cola.GetType().GetProperty("Count");
-                if (propCount != null) return (int)propCount.GetValue(cola);
-
-                var miCount = cola.GetType().GetMethod("Count");
-                if (miCount != null) return (int)miCount.Invoke(cola, null);
-
+                catch { }
                 return -1;
             }
-            catch { return -1; }
-        }
 
-        static void DrawStats(SistemaBanco sistema, int top, int left)
-        {
-            SafeWriteAt("=== ESTADÍSTICAS ===", left, top);
-            SafeWriteAt($"Clientes totales: {sistema.Clientes.ObtenerTodos().Count()}", left, top + 1);
-            SafeWriteAt($"Atenciones en memoria: {sistema.Atenciones.ObtenerTodos().Count()}", left, top + 2);
-            SafeWriteAt($"Cola preferencial (intento): {TryGetColaCount(sistema.ColaPreferencial)}", left, top + 3);
-            SafeWriteAt($"Cola normal (intento): {TryGetColaCount(sistema.ColaNormal)}", left, top + 4);
-            SafeWriteAt($"Hora: {DateTime.Now:dd/MM/yyyy HH:mm:ss}", left, top + 6);
-        }
-
-        static void SafeWriteAt(string text, int x, int y)
-        {
-            try
+            static void GenerarLlegada(SistemaBanco sistema, Random rnd, bool forzar)
             {
-                if (y < 0) return;
-                if (x < 0) x = 0;
-                Console.SetCursorPosition(x, y);
-                Console.Write(text);
-            }
-            catch { }
-        }
-
-        static string CenterText(string text, int width)
-        {
-            if (text.Length >= width) return text.Substring(0, width);
-            int left = (width - text.Length) / 2;
-            return new string(' ', left) + text + new string(' ', width - text.Length - left);
-        }
-
-        static string Truncate(string s, int width)
-        {
-            if (string.IsNullOrEmpty(s)) return "";
-            if (s.Length <= width) return s;
-            return s.Substring(0, width - 3) + "...";
-        }
-
-        static void GenerarLlegadaAleatoria(SistemaBanco sistema, Random rnd, bool forzar = false)
-        {
-            var todos = sistema.Clientes.ObtenerTodos().ToList();
-            Cliente cliente = null;
-            if (todos.Count > 0 && (forzar || rnd.NextDouble() < 0.8))
-            {
-                cliente = todos[rnd.Next(todos.Count)];
-            }
-
-            if (cliente == null)
-            {
-                cliente = new Cliente
+                try
                 {
-                    DNI = "X" + rnd.Next(1000, 9999),
-                    Nombres = "Genérico" + rnd.Next(1, 99),
-                    FechaNacimiento = DateTime.Today.AddYears(-rnd.Next(18, 80)),
-                    Discapacidad = rnd.NextDouble() < 0.08,
-                    Niños = rnd.NextDouble() < 0.15 ? rnd.Next(1, 4) : 0,
-                    Email = "auto@demo",
-                    Telefono = "000",
-                    Monto = rnd.Next(0, 5000)
-                };
-            }
+                    var todos = sistema.Clientes.ObtenerTodos().ToList();
+                    Cliente cliente = null;
+                    if (todos.Count > 0 && (forzar || rnd.NextDouble() < 0.85))
+                    {
+                        cliente = todos[rnd.Next(todos.Count)];
+                    }
+                    else
+                    {
+                        cliente = new Cliente
+                        {
+                            DNI = "X" + rnd.Next(1000, 9999),
+                            Nombres = "Auto" + rnd.Next(1, 999),
+                            FechaNacimiento = DateTime.Today.AddYears(-rnd.Next(18, 80)),
+                            Discapacidad = rnd.NextDouble() < 0.08,
+                            Niños = rnd.NextDouble() < 0.15 ? rnd.Next(1, 4) : 0,
+                            Email = "auto@demo",
+                            Telefono = "000",
+                            Monto = rnd.Next(0, 5000)
+                        };
+                    }
 
-            // Encolar con la lógica del sistema (generará ticket y encolará en las colas internas)
-            sistema.AgregarClienteACola(cliente);
-        }
-
-        static void ClearQueuesAndVentanillas(SistemaBanco sistema)
-        {
-            try
-            {
-                var miPref = sistema.ColaPreferencial.GetType().GetMethod("Clear");
-                miPref?.Invoke(sistema.ColaPreferencial, null);
+                    sistema.AgregarClienteACola(cliente);
+                }
+                catch
+                {
+                    // no fallar la simulación por una llegada
+                }
             }
-            catch { }
-            try
-            {
-                var miNorm = sistema.ColaNormal.GetType().GetMethod("Clear");
-                miNorm?.Invoke(sistema.ColaNormal, null);
-            }
-            catch { }
-
-            foreach (var v in sistema.Ventanillas) v.Liberar();
-            sistema.Ventanillas.Clear();
         }
     }
 }
