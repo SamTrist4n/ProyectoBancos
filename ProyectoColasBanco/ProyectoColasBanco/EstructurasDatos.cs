@@ -1,128 +1,177 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProyectoColasBanco
 {
-    // Nodo para lista enlazada
-    public class Nodo<T>
+    // Lista recursiva sin nodos, usando CLista
+    public class CLista
     {
-        public T Dato { get; set; }
-        public Nodo<T> Siguiente { get; set; }
+        private object aElemento;
+        private CLista aSubLista;
 
-        public Nodo(T dato)
+        public CLista()
         {
-            Dato = dato;
-            Siguiente = null;
+            aElemento = null;
+            aSubLista = null;
         }
-    }
 
-    // Lista enlazada recursiva
-    public class ListaRecursiva<T>
-    {
-        private Nodo<T> primero;
-        private Nodo<T> ultimo;
-        private int tamaño;
-
-        public ListaRecursiva()
+        public CLista(object pElemento, CLista pSubLista)
         {
-            primero = null;
-            ultimo = null;
-            tamaño = 0;
+            aElemento = pElemento;
+            aSubLista = pSubLista;
         }
+
+        public object Elemento { get => aElemento; set => aElemento = value; }
+        public CLista SubLista { get => aSubLista; set => aSubLista = value; }
 
         public bool EstaVacia()
         {
-            return primero == null;
+            return aElemento == null && aSubLista == null;
         }
 
-        public void Agregar(T dato)
+        public int Longitud()
         {
-            Nodo<T> nuevoNodo = new Nodo<T>(dato);
+            if (EstaVacia())
+                return 0;
+            else
+                return 1 + aSubLista.Longitud();
+        }
+
+        public void Agregar(object pElemento)
+        {
             if (EstaVacia())
             {
-                primero = nuevoNodo;
-                ultimo = nuevoNodo;
+                Elemento = pElemento;
+                SubLista = new CLista();
             }
             else
             {
-                ultimo.Siguiente = nuevoNodo;
-                ultimo = nuevoNodo;
+                SubLista.Agregar(pElemento);
+            }
+        }
+
+        public void Eliminar(int posicion)
+        {
+            if (EstaVacia()) return;
+            if (posicion == 1)
+            {
+                Elemento = SubLista?.Elemento;
+                SubLista = SubLista?.SubLista;
+            }
+            else
+            {
+                SubLista?.Eliminar(posicion - 1);
+            }
+        }
+
+        public object Iesimo(int posicion)
+        {
+            if (EstaVacia()) return null;
+            if (posicion == 1)
+                return Elemento;
+            else
+                return SubLista.Iesimo(posicion - 1);
+        }
+
+        public List<T> ObtenerTodos<T>()
+        {
+            var lista = new List<T>();
+            ObtenerTodosRecursivo(this, lista);
+            return lista;
+        }
+
+        private void ObtenerTodosRecursivo<T>(CLista lista, List<T> resultado)
+        {
+            if (lista == null || lista.EstaVacia()) return;
+            resultado.Add((T)lista.Elemento);
+            ObtenerTodosRecursivo(lista.SubLista, resultado);
+        }
+    }
+
+    // Cola de prioridad basada en CLista
+    public class ColaPrioridad<T>
+    {
+        private CLista lista;
+        private int capacidad;
+        private int tamaño;
+
+        public ColaPrioridad(int capacidad = -1)
+        {
+            lista = new CLista();
+            this.capacidad = capacidad;
+            tamaño = 0;
+        }               
+
+        public bool EstaVacia()
+        {
+            return tamaño == 0;
+        }
+
+        public bool EstaLlena()
+        {
+            return capacidad != -1 && tamaño >= capacidad;
+        }
+
+        // Encolar según prioridad (menor número = mayor prioridad)
+        public bool Encolar(T dato, int prioridad)
+        {
+            if (EstaLlena()) return false;
+
+            var nuevo = new NodoPrioridad<T>(dato, prioridad);
+
+            if (lista.EstaVacia())
+            {
+                lista.Agregar(nuevo);
+            }
+            else
+            {
+                // Insertar en la posición correcta según prioridad
+                int pos = 1;
+                int len = lista.Longitud();
+                for (; pos <= len; pos++)
+                {
+                    var actual = (NodoPrioridad<T>)lista.Iesimo(pos);
+                    if (prioridad < actual.Prioridad)
+                        break;
+                }
+                InsertarEn(pos, nuevo);
             }
             tamaño++;
+            return true;
         }
 
-        public bool Eliminar(T dato)
+        // Desencolar el de mayor prioridad
+        public T Desencolar()
         {
-            Nodo<T> actual = primero;
-            Nodo<T> anterior = null;
+            if (EstaVacia()) return default(T);
+            var primero = (NodoPrioridad<T>)lista.Iesimo(1);
+            lista.Eliminar(1);
+            tamaño--;
+            return primero.Dato;
+        }
 
-            while (actual != null)
+        public int Tamaño()
+        {
+            return tamaño;
+        }
+
+        // Insertar en posición (1-based)
+        private void InsertarEn(int posicion, NodoPrioridad<T> nodo)
+        {
+            if (posicion <= 1)
             {
-                if (actual.Dato.Equals(dato))
-                {
-                    if (anterior == null)
-                    {
-                        primero = actual.Siguiente;
-                    }
-                    else
-                    {
-                        anterior.Siguiente = actual.Siguiente;
-                    }
-
-                    if (actual == ultimo)
-                    {
-                        ultimo = anterior;
-                    }
-
-                    tamaño--;
-                    return true;
-                }
-
-                anterior = actual;
-                actual = actual.Siguiente;
+                var nueva = new CLista(lista.Elemento, lista.SubLista);
+                lista.Elemento = nodo;
+                lista.SubLista = nueva;
             }
-
-            return false;
-        }
-
-        public T Buscar(Func<T, bool> criterio)
-        {
-            return BuscarRecursivo(primero, criterio);
-        }
-
-        private T BuscarRecursivo(Nodo<T> nodo, Func<T, bool> criterio)
-        {
-            if (nodo == null) return default(T);
-            if (criterio(nodo.Dato)) return nodo.Dato;
-            return BuscarRecursivo(nodo.Siguiente, criterio);
-        }
-
-        public List<T> ObtenerTodos()
-        {
-            List<T> elementos = new List<T>();
-            ObtenerTodosRecursivo(primero, elementos);
-            return elementos;
-        }
-
-        private void ObtenerTodosRecursivo(Nodo<T> nodo, List<T> elementos)
-        {
-            if (nodo == null) return;
-            elementos.Add(nodo.Dato);
-            ObtenerTodosRecursivo(nodo.Siguiente, elementos);
-        }
-
-        public int Contar()
-        {
-            return ContarRecursivo(primero);
-        }
-
-        private int ContarRecursivo(Nodo<T> nodo)
-        {
-            if (nodo == null) return 0;
-            return 1 + ContarRecursivo(nodo.Siguiente);
+            else
+            {
+                CLista actual = lista;
+                for (int i = 1; i < posicion - 1 && actual.SubLista != null; i++)
+                    actual = actual.SubLista;
+                var nueva = new CLista(actual.SubLista?.Elemento, actual.SubLista?.SubLista);
+                actual.SubLista = new CLista(nodo, nueva);
+            }
         }
     }
 
@@ -131,106 +180,11 @@ namespace ProyectoColasBanco
     {
         public T Dato { get; set; }
         public int Prioridad { get; set; }
-        public NodoPrioridad<T> Siguiente { get; set; }
 
         public NodoPrioridad(T dato, int prioridad)
         {
             Dato = dato;
             Prioridad = prioridad;
-            Siguiente = null;
-        }
-    }
-
-    // Cola de prioridad
-    public class ColaPrioridad<T>
-    {
-        private NodoPrioridad<T> primero;
-        private NodoPrioridad<T> ultimo;
-        private int capacidad;
-        private int tamaño;
-
-        public ColaPrioridad(int capacidad = -1)
-        {
-            primero = null;
-            ultimo = null;
-            this.capacidad = capacidad;
-            tamaño = 0;
-        }
-
-        public bool EstaVacia()
-        {
-            return primero == null;
-        }
-
-        public bool EstaLlena()
-        {
-            return capacidad != -1 && tamaño >= capacidad;
-        }
-
-        public bool Encolar(T dato, int prioridad)
-        {
-            if (EstaLlena()) return false;
-
-            NodoPrioridad<T> nuevoNodo = new NodoPrioridad<T>(dato, prioridad);
-
-            if (EstaVacia())
-            {
-                primero = nuevoNodo;
-                ultimo = nuevoNodo;
-            }
-            else
-            {
-                // Insertar según prioridad (menor número = mayor prioridad)
-                if (prioridad < primero.Prioridad)
-                {
-                    nuevoNodo.Siguiente = primero;
-                    primero = nuevoNodo;
-                }
-                else
-                {
-                    NodoPrioridad<T> actual = primero;
-                    while (actual.Siguiente != null && actual.Siguiente.Prioridad <= prioridad)
-                    {
-                        actual = actual.Siguiente;
-                    }
-                    nuevoNodo.Siguiente = actual.Siguiente;
-                    actual.Siguiente = nuevoNodo;
-                    if (actual == ultimo)
-                    {
-                        ultimo = nuevoNodo;
-                    }
-                }
-            }
-
-            tamaño++;
-            return true;
-        }
-
-        public T Desencolar()
-        {
-            if (EstaVacia()) return default(T);
-
-            T dato = primero.Dato;
-            primero = primero.Siguiente;
-
-            if (primero == null)
-            {
-                ultimo = null;
-            }
-
-            tamaño--;
-            return dato;
-        }
-
-        public T VerPrimero()
-        {
-            if (EstaVacia()) return default(T);
-            return primero.Dato;
-        }
-
-        public int Tamaño()
-        {
-            return tamaño;
         }
     }
 }

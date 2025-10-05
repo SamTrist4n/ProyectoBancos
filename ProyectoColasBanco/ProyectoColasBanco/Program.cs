@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http; 
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,7 +67,7 @@ namespace ProyectoColasBanco
                 Console.WriteLine("14. Exportar reporte ventanillas");
                 Console.WriteLine("15. Recargar CSVs (desde bin)");
                 Console.WriteLine("16. Simulación gráfica (con cola y ventanillas)");
-                Console.WriteLine("17. Descargar archivos CSV necesarios"); // Nueva opción
+                Console.WriteLine("17. Descargar archivos CSV necesarios");
                 Console.WriteLine("0. Salir");
                 Console.Write("Opción: ");
 
@@ -97,7 +97,7 @@ namespace ProyectoColasBanco
                         case 14: ExportarVentanillas(); break;
                         case 15: CargarCsvInicial(); break;
                         case 16: Simulacion.Run(sistema); break;
-                        case 17: DescargarCsvs(); break; 
+                        case 17: DescargarCsvs(); break;
                         case 0: break;
                         default: Console.WriteLine("Opción no válida."); break;
                     }
@@ -110,7 +110,6 @@ namespace ProyectoColasBanco
             } while (opcion != 0);
         }
 
-        // Nuevo método para descargar los CSVs necesarios
         static void DescargarCsvs()
         {
             var archivos = new Dictionary<string, string>
@@ -144,7 +143,7 @@ namespace ProyectoColasBanco
             Console.WriteLine("Descarga de archivos CSV completada.");
             Console.WriteLine("Presiona una tecla para volver al menú...");
             Console.ReadKey(true);
-            Console.Clear(); // Limpia la pantalla antes de mostrar el menú de nuevo
+            Console.Clear();
         }
 
         #region Registrar
@@ -194,7 +193,7 @@ namespace ProyectoColasBanco
         {
             Console.WriteLine("\n=== CLIENTES ===");
             Console.WriteLine("DNI".PadRight(12) + "Nombres".PadRight(25) + "F.Nac".PadRight(12) + "Disc".PadRight(6) + "Niños".PadRight(6) + "Email".PadRight(25) + "Tel".PadRight(15) + "Monto".PadLeft(10));
-            var todos = sistema.Clientes.ObtenerTodos();
+            var todos = sistema.Clientes.ObtenerTodos<Cliente>();
             foreach (var c in todos) c.Escribir();
         }
 
@@ -202,7 +201,7 @@ namespace ProyectoColasBanco
         {
             Console.WriteLine("\n=== CAJEROS ===");
             Console.WriteLine("DNI".PadRight(12) + "Nombres".PadRight(25) + "Dirección".PadRight(30) + "Email".PadRight(25) + "Tel".PadRight(15));
-            var todos = sistema.Cajeros.ObtenerTodos();
+            var todos = sistema.Cajeros.ObtenerTodos<Cajero>();
             foreach (var c in todos) c.Escribir();
         }
 
@@ -210,7 +209,7 @@ namespace ProyectoColasBanco
         {
             Console.WriteLine("\n=== SERVICIOS ===");
             Console.WriteLine("IdServicio".PadRight(12) + "Descripción".PadRight(50));
-            var todos = sistema.Servicios.ObtenerTodos();
+            var todos = sistema.Servicios.ObtenerTodos<Servicio>();
             foreach (var s in todos) s.Escribir();
         }
 
@@ -218,7 +217,7 @@ namespace ProyectoColasBanco
         {
             Console.WriteLine("\n=== ATENCIONES ===");
             Console.WriteLine("Ticket".PadRight(12) + "FechaHora".PadRight(20) + "Cliente".PadRight(12) + "Cajero".PadRight(12) + "Servicio".PadRight(12) + "Monto".PadLeft(10) + "Segs".PadLeft(8));
-            var todos = sistema.Atenciones.ObtenerTodos();
+            var todos = sistema.Atenciones.ObtenerTodos<Atencion>();
             foreach (var a in todos) a.Escribir();
         }
 
@@ -229,7 +228,6 @@ namespace ProyectoColasBanco
             foreach (var v in sistema.Ventanillas) v.Escribir();
         }
         #endregion
-
 
         #region Otras acciones
         static void ConfigurarVentanillas()
@@ -246,7 +244,7 @@ namespace ProyectoColasBanco
         static void ProcesarAtencionesUnaVez()
         {
             sistema.ProcesarAtenciones();
-            Console.WriteLine("Procesamiento de atenciones ejecutado (una iteración).");
+            Console.WriteLine("Procesamiento de atenciones ejecutado.");
         }
 
         static void ExportarTransacciones()
@@ -301,7 +299,6 @@ namespace ProyectoColasBanco
                     {
                         if (rnd.NextDouble() < ProbLlegada) GenerarLlegada(sistema, rnd, false);
 
-                        // Lógica robusta de procesamiento de atenciones
                         ProcesarAtencionesRobusto(sistema);
                     }
 
@@ -328,8 +325,11 @@ namespace ProyectoColasBanco
                     }
 
                     Console.WriteLine();
-                    
-                    var totalAt = sistema.Atenciones.ObtenerTodos()?.Count() ?? 0;
+
+                    // Mostrar cantidad de clientes en colas
+                    Console.WriteLine($"Cola preferencial: {sistema.ColaPreferencial.Tamaño()}   |   Cola normal: {sistema.ColaNormal.Tamaño()}");
+
+                    var totalAt = sistema.Atenciones.ObtenerTodos<Atencion>()?.Count() ?? 0;
                     Console.WriteLine($"Atenciones registradas: {totalAt}");
 
                     Console.WriteLine();
@@ -341,10 +341,8 @@ namespace ProyectoColasBanco
                 Console.ReadKey(true);
             }
 
-            // Lógica robusta de procesamiento de atenciones
             private static void ProcesarAtencionesRobusto(SistemaBanco sistema)
             {
-                // 1. Actualizar tiempos y liberar ventanillas si corresponde
                 foreach (var ventanilla in sistema.Ventanillas)
                 {
                     if (ventanilla.Atendido && !string.IsNullOrEmpty(ventanilla.DNICliente))
@@ -357,26 +355,22 @@ namespace ProyectoColasBanco
                     }
                 }
 
-                // 2. Asignar clientes a ventanillas libres
                 foreach (var ventanilla in sistema.Ventanillas)
                 {
                     if (!ventanilla.Atendido || string.IsNullOrEmpty(ventanilla.DNICliente))
                     {
                         Cliente cliente = null;
                         int prioridad = 0;
-                        // Preferencial primero si la ventanilla es preferencial
                         if (ventanilla.Preferencial && !sistema.ColaPreferencial.EstaVacia())
                         {
                             cliente = sistema.ColaPreferencial.Desencolar();
                             prioridad = 1;
                         }
-                        // Si no, normal
                         else if (!sistema.ColaNormal.EstaVacia())
                         {
                             cliente = sistema.ColaNormal.Desencolar();
                             prioridad = 3;
                         }
-                        // Si la ventanilla es normal y la preferencial tiene clientes, también puede atenderlos
                         else if (!ventanilla.Preferencial && !sistema.ColaPreferencial.EstaVacia())
                         {
                             cliente = sistema.ColaPreferencial.Desencolar();
@@ -385,12 +379,12 @@ namespace ProyectoColasBanco
 
                         if (cliente != null)
                         {
-                            string nroTicket = "TKT-" + DateTime.Now.Ticks.ToString().Substring(8); // Genera un ticket único
+                            string nroTicket = "TKT-" + DateTime.Now.Ticks.ToString().Substring(8);
                             int tiempoAtencion = cliente.CalcularTiempoAtencion();
                             ventanilla.AsignarCliente(cliente.DNI, nroTicket, tiempoAtencion);
 
-                            // Registrar la atención
-                            var servicio = sistema.Servicios.ObtenerTodos().FirstOrDefault() ?? new Servicio { IdServicio = "RET", Descripcion = "Retiro" };
+                            var servicios = sistema.Servicios.ObtenerTodos<Servicio>();
+                            var servicio = servicios.FirstOrDefault() ?? new Servicio { IdServicio = "RET", Descripcion = "Retiro" };
                             var atencion = new Atencion
                             {
                                 NroTicket = nroTicket,
@@ -411,7 +405,7 @@ namespace ProyectoColasBanco
             {
                 try
                 {
-                    var todos = sistema.Clientes.ObtenerTodos().ToList();
+                    var todos = sistema.Clientes.ObtenerTodos<Cliente>().ToList();
                     Cliente cliente = null;
                     if (todos.Count > 0 && (forzar || rnd.NextDouble() < 0.85))
                     {

@@ -9,10 +9,10 @@ namespace ProyectoColasBanco
 {
     public class SistemaBanco
     {
-        public ListaRecursiva<Cliente> Clientes { get; set; }
-        public ListaRecursiva<Cajero> Cajeros { get; set; }
-        public ListaRecursiva<Servicio> Servicios { get; set; }
-        public ListaRecursiva<Atencion> Atenciones { get; set; }
+        public CLista Clientes { get; set; }
+        public CLista Cajeros { get; set; }
+        public CLista Servicios { get; set; }
+        public CLista Atenciones { get; set; }
         public List<Ventanilla> Ventanillas { get; set; }
         public ColaPrioridad<Cliente> ColaPreferencial { get; set; }
         public ColaPrioridad<Cliente> ColaNormal { get; set; }
@@ -21,10 +21,10 @@ namespace ProyectoColasBanco
 
         public SistemaBanco()
         {
-            Clientes = new ListaRecursiva<Cliente>();
-            Cajeros = new ListaRecursiva<Cajero>();
-            Servicios = new ListaRecursiva<Servicio>();
-            Atenciones = new ListaRecursiva<Atencion>();
+            Clientes = new CLista();
+            Cajeros = new CLista();
+            Servicios = new CLista();
+            Atenciones = new CLista();
             Ventanillas = new List<Ventanilla>();
             ColaPreferencial = new ColaPrioridad<Cliente>(-1); // Capacidad ilimitada
             ColaNormal = new ColaPrioridad<Cliente>(10); // Capacidad limitada
@@ -148,7 +148,8 @@ namespace ProyectoColasBanco
 
         private void RegistrarAtencion(Cliente cliente, Ventanilla ventanilla, int segundos)
         {
-            var servicio = Servicios.ObtenerTodos().FirstOrDefault() ?? new Servicio { IdServicio = "RET", Descripcion = "Retiro" };
+            var servicios = Servicios.ObtenerTodos<Servicio>();
+            var servicio = servicios.FirstOrDefault() ?? new Servicio { IdServicio = "RET", Descripcion = "Retiro" };
 
             var atencion = new Atencion
             {
@@ -167,7 +168,7 @@ namespace ProyectoColasBanco
         public void ExportarReporteTransacciones(string rutaArchivo)
         {
             DateTime dosMesesAtras = DateTime.Now.AddMonths(-2);
-            var transacciones = Atenciones.ObtenerTodos()
+            var transacciones = Atenciones.ObtenerTodos<Atencion>()
                 .Where(a => a.FechaHora >= dosMesesAtras)
                 .ToList();
 
@@ -196,4 +197,3 @@ namespace ProyectoColasBanco
         }
     }
 }
-
