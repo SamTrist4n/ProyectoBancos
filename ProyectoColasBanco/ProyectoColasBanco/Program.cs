@@ -328,15 +328,12 @@ namespace ProyectoColasBanco
                     }
 
                     Console.WriteLine();
-                    int prefCount = TryGetColaCountSafe(sistema.ColaPreferencial);
-                    int normCount = TryGetColaCountSafe(sistema.ColaNormal);
-                    Console.WriteLine($"Cola preferencial: {prefCount}   |   Cola normal: {normCount}");
-
+                    
                     var totalAt = sistema.Atenciones.ObtenerTodos()?.Count() ?? 0;
                     Console.WriteLine($"Atenciones registradas: {totalAt}");
 
                     Console.WriteLine();
-                    Console.WriteLine($"Tick every {TickMs} ms. Hora: {DateTime.Now:HH:mm:ss}");
+                    Console.WriteLine($"Hora: {DateTime.Now:HH:mm:ss}");
                     Thread.Sleep(TickMs);
                 }
 
@@ -408,20 +405,6 @@ namespace ProyectoColasBanco
                         }
                     }
                 }
-            }
-
-            static int TryGetColaCountSafe(object cola)
-            {
-                try
-                {
-                    if (cola == null) return 0;
-                    var miTamaño = cola.GetType().GetMethod("Tamaño") ?? cola.GetType().GetMethod("Count");
-                    if (miTamaño != null) return (int)miTamaño.Invoke(cola, null);
-                    var prop = cola.GetType().GetProperty("Count");
-                    if (prop != null) return (int)prop.GetValue(cola);
-                }
-                catch { }
-                return -1;
             }
 
             static void GenerarLlegada(SistemaBanco sistema, Random rnd, bool forzar)
