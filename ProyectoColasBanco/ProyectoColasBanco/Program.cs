@@ -23,7 +23,45 @@ namespace ProyectoColasBanco
             // Intentar cargar archivos desde la carpeta de ejecución (bin)
             CargarCsvInicial();
 
+
             MostrarMenu();
+        }
+
+        static void PoblarColasIniciales(int cantidadPreferencial = 5, int cantidadNormal = 8)
+        {
+            var rnd = new Random();
+            // Preferencial
+            for (int i = 0; i < cantidadPreferencial; i++)
+            {
+                var c = new Cliente
+                {
+                    DNI = "PREF" + rnd.Next(10000, 99999),
+                    Nombres = "Preferencial" + (i + 1),
+                    FechaNacimiento = DateTime.Today.AddYears(-rnd.Next(18, 80)),
+                    Discapacidad = true, // Para asegurar prioridad
+                    Niños = 0,
+                    Email = "pref@demo.com",
+                    Telefono = "999999999",
+                    Monto = rnd.Next(100, 5000)
+                };
+                sistema.AgregarClienteACola(c);
+            }
+            // Normal
+            for (int i = 0; i < cantidadNormal; i++)
+            {
+                var c = new Cliente
+                {
+                    DNI = "NORM" + rnd.Next(10000, 99999),
+                    Nombres = "Normal" + (i + 1),
+                    FechaNacimiento = DateTime.Today.AddYears(-rnd.Next(18, 80)),
+                    Discapacidad = false,
+                    Niños = 0,
+                    Email = "norm@demo.com",
+                    Telefono = "888888888",
+                    Monto = rnd.Next(100, 5000)
+                };
+                sistema.AgregarClienteACola(c);
+            }
         }
 
         static void CargarCsvInicial()
@@ -96,7 +134,7 @@ namespace ProyectoColasBanco
                         case 13: ExportarTransacciones(); break;
                         case 14: ExportarVentanillas(); break;
                         case 15: CargarCsvInicial(); break;
-                        case 16: Simulacion.Run(sistema); break;
+                        case 16: PoblarColasIniciales(); Simulacion.Run(sistema); break;
                         case 17: DescargarCsvs(); break;
                         case 0: break;
                         default: Console.WriteLine("Opción no válida."); break;
@@ -264,7 +302,6 @@ namespace ProyectoColasBanco
             sistema.ExportarReporteVentanillas(ruta);
             Console.WriteLine("Reporte exportado a: " + Path.GetFullPath(ruta));
         }
-        #endregion
 
         public static class Simulacion
         {
@@ -436,3 +473,4 @@ namespace ProyectoColasBanco
         }
     }
 }
+#endregion
